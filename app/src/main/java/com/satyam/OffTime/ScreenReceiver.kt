@@ -21,7 +21,7 @@ class ScreenReceiver : BroadcastReceiver() {
                 screenOnTime = System.currentTimeMillis()
                 val screenOffDuration = screenOnTime - screenOffTime
                 // Do something with the screenOffDuration
-                Log.d("ScreenReceiver", "Screen was off for ${screenOffDuration / 1000} seconds")
+                Log.d("strData", "Screen was off for ${screenOffDuration / 1000} seconds")
                 Toast.makeText(context, "Screen was off for ${screenOffDuration / 1000} seconds", Toast.LENGTH_LONG).show()
             }
         }

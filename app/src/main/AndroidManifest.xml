@@ -24,7 +24,6 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".ScreenTimeService" />
         <receiver android:name=".ScreenReceiver" />
 
     </application>

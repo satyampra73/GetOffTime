@@ -18,29 +18,45 @@ import androidx.core.app.NotificationCompat;
 
 public class ScreenOffService extends Service {
 
-    ScreenReceiver screenReceiver;
+    private ScreenReceiver screenReceiver;
+    public static boolean isRunning = false;
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if(intent!=null){
-            String action =intent.getAction();
-            if (action!=null){
-//                if (action.equals(Constents.ActionStartScreenService)){
-//                    startScreenService();
-//                }
-//                else if (action.equals(Constents.ActionStopScreenService)){
-//                    stopScreenService();
-//                }
+        if(intent != null) {
+            String action = intent.getAction();
+            if(action != null) {
                 startScreenService();
             }
         }
         return super.onStartCommand(intent, flags, startId);
     }
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        isRunning = true;
+        screenReceiver = new ScreenReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        filter.addAction(Intent.ACTION_SCREEN_ON);
+        registerReceiver(screenReceiver, filter);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        isRunning = false;
+        if (screenReceiver != null) {
+            unregisterReceiver(screenReceiver);
+        }
+    }
 
     private void startScreenService() {
         String channelId = "screenOff_notification_channel";
@@ -77,13 +93,11 @@ public class ScreenOffService extends Service {
             }
         }
 
-        startForeground(Constents.ScreenServiceId,builder.build());
+        startForeground(Constents.ScreenServiceId, builder.build());
     }
+
     private void stopScreenService() {
-
+        // Implement stop functionality if needed
     }
-
-
-
-
 }
+

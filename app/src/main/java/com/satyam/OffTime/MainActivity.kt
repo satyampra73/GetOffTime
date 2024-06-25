@@ -28,17 +28,18 @@ class MainActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        screenReceiver = ScreenReceiver()
-        val filter = IntentFilter().apply {
-            addAction(Intent.ACTION_SCREEN_OFF)
-            addAction(Intent.ACTION_SCREEN_ON)
-        }
-        registerReceiver(screenReceiver, filter)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 1001)
             } else {
-                startScreenService()
+                if (!ScreenOffService.isRunning){
+                    startScreenService()
+                }
+                else{
+                    Log.d("strCheck", "Ok No Need to Run Again")
+                }
+
+
                 Log.d("strCheck", "On else of top")
             }
         }
@@ -62,7 +63,6 @@ class MainActivity : AppCompatActivity(){
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_NOTIFICATION_PERMISSION) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                startScreenService()
                 Log.d("strCheck", "inside if on onRequestPermissionResult")
             } else {
                 Toast.makeText(
@@ -74,20 +74,6 @@ class MainActivity : AppCompatActivity(){
         }
     }
 
-    private fun isScreenOffServiceRunning(): Boolean {
-        val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager
-        if (activityManager != null) {
-            val runningServices = activityManager.getRunningServices(Int.MAX_VALUE)
-            for (service in runningServices) {
-                if (ScreenOffService::class.java.name == service.service.className) {
-                    if (service.foreground) {
-                        return true
-                    }
-                }
-            }
-        }
-        return false
-    }
 
     override fun onDestroy() {
         super.onDestroy()

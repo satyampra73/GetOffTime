@@ -24,9 +24,8 @@ class ScreenReceiver : BroadcastReceiver() {
                 // Do something with the screenOffDuration
                 Log.d("strData", "Screen was off for ${screenOffDuration / 1000} seconds")
                 Toast.makeText(context, "Screen was off for ${screenOffDuration / 1000} seconds", Toast.LENGTH_LONG).show()
-                val helper=DBHelper(context)
+                val helper = DBHelper(context)
                 helper.insertString("Screen was off for ${screenOffDuration / 1000} seconds")
-
             }
         }
     }

@@ -11,15 +11,23 @@ import android.provider.SyncStateContract
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.satyam.OffTime.adapter.StringAdapter
+import com.satyam.OffTime.databinding.ActivityMainBinding
+import com.satyam.OffTime.db.DBHelper
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(){
     private lateinit var screenReceiver: ScreenReceiver
 
     val REQUEST_NOTIFICATION_PERMISSION = 1
 
+    private lateinit var dbHelper: DBHelper
+    private lateinit var stringAdapter: StringAdapter
+    lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         screenReceiver = ScreenReceiver()
         val filter = IntentFilter().apply {
             addAction(Intent.ACTION_SCREEN_OFF)
@@ -34,11 +42,10 @@ class MainActivity : AppCompatActivity() {
                 Log.d("strCheck", "On else of top")
             }
         }
+
+
+
     }
-//    override fun onDestroy() {
-//        super.onDestroy()
-//        unregisterReceiver(screenReceiver)
-//    }
 
     private fun startScreenService() {
         val intent = Intent(applicationContext, ScreenOffService::class.java)
@@ -80,6 +87,31 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return false
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Unregister MainActivity as a listener when the activity is destroyed
+        dbHelper.close()
+    }
+
+    // Implement the onDataChanged method from DataChangeListener interface
+
+
+    override fun onResume() {
+
+        dbHelper = DBHelper(this)
+
+
+        // Initialize RecyclerView and adapter
+        val list = dbHelper.getAllStrings()
+        stringAdapter = StringAdapter(this, list)
+
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.adapter = stringAdapter
+        stringAdapter.notifyDataSetChanged()
+        super.onResume()
+
     }
 
 

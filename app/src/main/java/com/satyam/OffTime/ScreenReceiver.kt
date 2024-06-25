@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
+import com.satyam.OffTime.db.DBHelper
 
 class ScreenReceiver : BroadcastReceiver() {
     companion object {
@@ -23,6 +24,9 @@ class ScreenReceiver : BroadcastReceiver() {
                 // Do something with the screenOffDuration
                 Log.d("strData", "Screen was off for ${screenOffDuration / 1000} seconds")
                 Toast.makeText(context, "Screen was off for ${screenOffDuration / 1000} seconds", Toast.LENGTH_LONG).show()
+                val helper=DBHelper(context)
+                helper.insertString("Screen was off for ${screenOffDuration / 1000} seconds")
+
             }
         }
     }

@@ -30,17 +30,18 @@ class MainActivity : AppCompatActivity(){
         setContentView(binding.root)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 1001)
+                requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), REQUEST_NOTIFICATION_PERMISSION)
             } else {
-                if (!ScreenOffService.isRunning){
+                if (!ScreenOffService.isRunning) {
                     startScreenService()
-                }
-                else{
+                } else {
                     Log.d("strCheck", "Ok No Need to Run Again")
                 }
-
-
                 Log.d("strCheck", "On else of top")
+            }
+        } else {
+            if (!ScreenOffService.isRunning) {
+                startScreenService()
             }
         }
 
@@ -55,21 +56,14 @@ class MainActivity : AppCompatActivity(){
         Toast.makeText(this@MainActivity, "Service Started", Toast.LENGTH_SHORT).show()
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_NOTIFICATION_PERMISSION) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.d("strCheck", "inside if on onRequestPermissionResult")
+                Log.d("strCheck", "Notification permission granted")
+                startScreenService()  // Start the service when permission is granted
             } else {
-                Toast.makeText(
-                    this@MainActivity,
-                    "Notification permission required.",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(this@MainActivity, "Notification permission required.", Toast.LENGTH_SHORT).show()
             }
         }
     }

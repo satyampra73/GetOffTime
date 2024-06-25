@@ -21,12 +21,24 @@ class ScreenReceiver : BroadcastReceiver() {
             Intent.ACTION_SCREEN_ON -> {
                 screenOnTime = System.currentTimeMillis()
                 val screenOffDuration = screenOnTime - screenOffTime
-                // Do something with the screenOffDuration
-                Log.d("strData", "Screen was off for ${screenOffDuration / 1000} seconds")
-                Toast.makeText(context, "Screen was off for ${screenOffDuration / 1000} seconds", Toast.LENGTH_LONG).show()
+                val formattedDuration = formatDuration(screenOffDuration)
+
+                Log.d("strData", "Screen was off for $formattedDuration")
+                Toast.makeText(context, "Time : $formattedDuration", Toast.LENGTH_LONG).show()
+
                 val helper = DBHelper(context)
-                helper.insertString("Screen was off for ${screenOffDuration / 1000} seconds")
+                helper.insertString("Time : $formattedDuration")
             }
         }
+    }
+
+    private fun formatDuration(durationMillis: Long): String {
+        val seconds = durationMillis / 1000
+        val minutes = seconds / 60
+        val hours = minutes / 60
+        val remainingMinutes = minutes % 60
+        val remainingSeconds = seconds % 60
+
+        return String.format("%02d:%02d:%02d", hours, remainingMinutes, remainingSeconds)
     }
 }

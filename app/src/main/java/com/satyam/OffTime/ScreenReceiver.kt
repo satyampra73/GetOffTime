@@ -3,9 +3,14 @@ package com.satyam.OffTime
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import com.satyam.OffTime.db.DBHelper
+import com.satyam.OffTime.model.Data
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class ScreenReceiver : BroadcastReceiver() {
     companion object {
@@ -13,11 +18,13 @@ class ScreenReceiver : BroadcastReceiver() {
         var screenOnTime: Long = 0L
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onReceive(context: Context, intent: Intent) {
         when (intent.action) {
             Intent.ACTION_SCREEN_OFF -> {
                 screenOffTime = System.currentTimeMillis()
             }
+
             Intent.ACTION_SCREEN_ON -> {
                 screenOnTime = System.currentTimeMillis()
                 val screenOffDuration = screenOnTime - screenOffTime
@@ -26,10 +33,18 @@ class ScreenReceiver : BroadcastReceiver() {
                 Log.d("strData", "Screen was off for $formattedDuration")
                 Toast.makeText(context, "Time : $formattedDuration", Toast.LENGTH_LONG).show()
 
+                val data = Data(getTodayDate(), formattedDuration)
                 val helper = DBHelper(context)
-                helper.insertString("Time : $formattedDuration")
+                helper.insertString(data)
             }
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getTodayDate(): String {
+        val today = LocalDate.now()
+        val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+        return today.format(formatter)
     }
 
     private fun formatDuration(durationMillis: Long): String {

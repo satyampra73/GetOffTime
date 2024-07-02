@@ -1,13 +1,11 @@
 package com.satyam.OffTime
 
-import android.app.ActivityManager
-import android.content.Context
+import android.R
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.provider.SyncStateContract
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.satyam.OffTime.adapter.StringAdapter
 import com.satyam.OffTime.databinding.ActivityMainBinding
 import com.satyam.OffTime.db.DBHelper
+
 
 class MainActivity : AppCompatActivity(){
     private lateinit var screenReceiver: ScreenReceiver
@@ -28,6 +27,15 @@ class MainActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+        // Reference to the Toolbar
+
+
+        // Set the Toolbar as the ActionBar
+        setSupportActionBar(binding.toolbar)
+        binding.toolbar.setTitleTextColor(Color.WHITE)
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), REQUEST_NOTIFICATION_PERMISSION)
@@ -80,12 +88,12 @@ class MainActivity : AppCompatActivity(){
 
     override fun onResume() {
 
+
         dbHelper = DBHelper(this)
 
-
         // Initialize RecyclerView and adapter
-        val list = dbHelper.getAllStrings()
-        stringAdapter = StringAdapter(this, list)
+        val dataList = dbHelper.getAllData()
+        stringAdapter = StringAdapter(this, dataList)
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = stringAdapter

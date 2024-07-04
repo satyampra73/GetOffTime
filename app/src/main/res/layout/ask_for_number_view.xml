@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="10dp"
+    android:layout_gravity="center"
+    android:padding="10dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        >
+
+     <TextView
+         android:id="@+id/txtTopText"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="Please Enter Emergency Mobile No."
+         android:textColor="@color/black"
+         android:textSize="18sp"
+         />
+
+        <EditText
+            android:id="@+id/etEnterAmount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/row_bg_stroke"
+            android:hint="Mobile No."
+            android:inputType="number"
+            android:maxLines="1"
+            android:layout_below="@+id/txtTopText"
+            android:padding="12dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@+id/etEnterAmount"
+            >
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnAddWallet"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/dialog_btn_add"
+                android:gravity="center"
+                android:text="Add"
+                android:layout_marginEnd="2.5dp"
+                android:layout_weight="1"
+                android:textColor="@color/white"
+                android:textAllCaps="false"
+                android:textSize="13sp" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnCancel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/dialog_btn_cancel"
+                android:gravity="center"
+                android:text="Cancel"
+                android:layout_marginStart="2.5dp"
+                android:layout_weight="1"
+                android:textColor="@color/black"
+                android:textAllCaps="false"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+</androidx.cardview.widget.CardView>

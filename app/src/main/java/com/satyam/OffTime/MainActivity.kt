@@ -1,14 +1,19 @@
 package com.satyam.OffTime
 
-import android.R
+import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.satyam.OffTime.adapter.StringAdapter
 import com.satyam.OffTime.databinding.ActivityMainBinding
@@ -19,7 +24,7 @@ class MainActivity : AppCompatActivity(){
     private lateinit var screenReceiver: ScreenReceiver
 
     val REQUEST_NOTIFICATION_PERMISSION = 1
-
+    lateinit var dialog: Dialog
     private lateinit var dbHelper: DBHelper
     private lateinit var stringAdapter: StringAdapter
     lateinit var binding: ActivityMainBinding
@@ -53,7 +58,42 @@ class MainActivity : AppCompatActivity(){
             }
         }
 
+        binding.ltMobile.visibility = View.GONE
+        binding.btnAdd.visibility = View.VISIBLE
+        dialog = Dialog(this@MainActivity)
+        binding.btnAdd.setOnClickListener{
+            dialog.setContentView(R.layout.ask_for_number_view)
+            dialog.window
+                ?.setLayout(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+            dialog.setCancelable(true)
+            dialog.window!!.attributes.windowAnimations = R.style.animation
+            dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
+            val etEnterAmount = dialog.findViewById<EditText>(R.id.etEnterAmount)
+            val btnAddWallet = dialog.findViewById<AppCompatButton>(R.id.btnAddWallet)
+            val btnCancel = dialog.findViewById<AppCompatButton>(R.id.btnCancel)
+
+            btnAddWallet.setOnClickListener(View.OnClickListener {
+                if (etEnterAmount.text.toString().isEmpty()) {
+                    Toast.makeText(this@MainActivity, "Please Enter Mobile No. ", Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+
+                    dialog.dismiss()
+                    binding.txtMobile.text = etEnterAmount.text.toString()
+                    binding.ltMobile.visibility = View.VISIBLE
+                    binding.btnAdd.visibility = View.GONE
+
+                }
+            })
+
+            btnCancel.setOnClickListener(View.OnClickListener { dialog.dismiss() })
+
+            dialog.show()
+        }
 
     }
 

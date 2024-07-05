@@ -47,15 +47,32 @@
                 android:text="Emergency Mobile No."
                 />
 
-            <TextView
-                android:id="@+id/txtMobile"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textSize="18sp"
                 android:layout_marginTop="5dp"
-                android:text="Emergency Mobile No."
-                />
+                >
+                <TextView
+                    android:id="@+id/txtMobile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:text="Emergency Mobile No."
+                    />
+
+                <ImageView
+                    android:id="@+id/imgEdit"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="10dp"
+                    android:src="@drawable/edit"
+                    android:layout_gravity="center"
+                    />
+
+            </LinearLayout>
+
+
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView

@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
+import android.telephony.SmsManager
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,8 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.satyam.OffTime.adapter.StringAdapter
 import com.satyam.OffTime.databinding.ActivityMainBinding
@@ -28,6 +31,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var dbHelper: DBHelper
     private lateinit var stringAdapter: StringAdapter
     lateinit var binding: ActivityMainBinding
+    private val PERMISSION_REQUEST_CODE = 123
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -35,36 +40,76 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         binding.toolbar.setTitleTextColor(Color.WHITE)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(
-                    arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
-                    REQUEST_NOTIFICATION_PERMISSION
-                )
-            } else {
-                if (!ScreenOffService.isRunning) {
-                    startScreenService()
-                } else {
-                    Log.d("strCheck", "Ok No Need to Run Again")
-                }
-                Log.d("strCheck", "On else of top")
-            }
-        } else {
-            if (!ScreenOffService.isRunning) {
-                startScreenService()
-            }
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//            if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+//                requestPermissions(
+//                    arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
+//                    REQUEST_NOTIFICATION_PERMISSION
+//                )
+//            } else {
+//                if (!ScreenOffService.isRunning) {
+//                    startScreenService()
+//                } else {
+//                    Log.d("strCheck", "Ok No Need to Run Again")
+//                }
+//                Log.d("strCheck", "On else of top")
+//            }
+//        } else {
+//            if (!ScreenOffService.isRunning) {
+//                startScreenService()
+//            }
+//        }
+
+
+        checkAndRequestPermissions()
 
 
         dialog = Dialog(this@MainActivity)
         binding.btnAdd.setOnClickListener {
             openDialog()
+            val phoneNumber = "9793828742"
+            val message = "Hello, this is a add test message."
+
+            try {
+                val smsManager = SmsManager.getDefault()
+                smsManager.sendTextMessage(phoneNumber, null, message, null, null)
+                Toast.makeText(this, "SMS sent successfully", Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Toast.makeText(this, "SMS failed to send", Toast.LENGTH_SHORT).show()
+            }
         }
 
         binding.imgEdit.setOnClickListener {
             openDialog()
         }
 
+    }
+
+
+    private fun checkAndRequestPermissions() {
+        val permissionsNeeded = mutableListOf<String>()
+
+        // Check SEND_SMS permission
+        val smsPermission = ContextCompat.checkSelfPermission(this, android.Manifest.permission.SEND_SMS)
+        if (smsPermission != PackageManager.PERMISSION_GRANTED) {
+            permissionsNeeded.add(android.Manifest.permission.SEND_SMS)
+        }
+
+        // Check POST_NOTIFICATIONS permission for devices running TIRAMISU or higher
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val notificationPermission = ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS)
+            if (notificationPermission != PackageManager.PERMISSION_GRANTED) {
+                permissionsNeeded.add(android.Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
+
+        if (permissionsNeeded.isNotEmpty()) {
+            ActivityCompat.requestPermissions(this, permissionsNeeded.toTypedArray(), PERMISSION_REQUEST_CODE)
+        } else {
+            // All permissions are already granted
+            startScreenService()
+        }
     }
 
     private fun openDialog() {

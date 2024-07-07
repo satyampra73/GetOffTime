@@ -67,17 +67,6 @@ class MainActivity : AppCompatActivity() {
         dialog = Dialog(this@MainActivity)
         binding.btnAdd.setOnClickListener {
             openDialog()
-            val phoneNumber = "9793828742"
-            val message = "Hello, this is a add test message."
-
-            try {
-                val smsManager = SmsManager.getDefault()
-                smsManager.sendTextMessage(phoneNumber, null, message, null, null)
-                Toast.makeText(this, "SMS sent successfully", Toast.LENGTH_SHORT).show()
-            } catch (e: Exception) {
-                e.printStackTrace()
-                Toast.makeText(this, "SMS failed to send", Toast.LENGTH_SHORT).show()
-            }
         }
 
         binding.imgEdit.setOnClickListener {

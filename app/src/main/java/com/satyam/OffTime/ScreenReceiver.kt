@@ -4,6 +4,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
+import android.telephony.SmsManager
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -16,13 +19,17 @@ class ScreenReceiver : BroadcastReceiver() {
     companion object {
         var screenOffTime: Long = 0L
         var screenOnTime: Long = 0L
+        const val TimeInMilis = 60 * 60 * 1000
     }
+    private var handler: Handler? = null
+    private var runnable: Runnable? = null
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onReceive(context: Context, intent: Intent) {
         when (intent.action) {
             Intent.ACTION_SCREEN_OFF -> {
                 screenOffTime = System.currentTimeMillis()
+                startTimer(context)
             }
 
             Intent.ACTION_SCREEN_ON -> {
@@ -56,4 +63,35 @@ class ScreenReceiver : BroadcastReceiver() {
 
         return String.format("%02d:%02d:%02d", hours, remainingMinutes, remainingSeconds)
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun startTimer(context: Context) {
+        handler = Handler(Looper.getMainLooper())
+        runnable = Runnable {
+            val screenOffDuration = System.currentTimeMillis() - screenOffTime
+            if (screenOffDuration >= TimeInMilis) {
+                // Perform the action when screen off duration reaches 2 minutes
+                val helper = DBHelper(context)
+                val phoneNumber = helper.getMobile()
+                val message = "Mobile Phone Is In Active From Long Time"
+
+                try {
+                    val smsManager = SmsManager.getDefault()
+                    smsManager.sendTextMessage(phoneNumber, null, message, null, null)
+                    Toast.makeText(context, "SMS sent successfully", Toast.LENGTH_SHORT).show()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Toast.makeText(context, "SMS failed to send", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+        handler?.postDelayed(runnable!!, TimeInMilis.toLong())
+    }
+
+    private fun stopTimer() {
+        handler?.removeCallbacks(runnable!!)
+        handler = null
+        runnable = null
+    }
+
 }

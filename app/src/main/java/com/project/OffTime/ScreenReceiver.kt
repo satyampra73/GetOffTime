@@ -1,4 +1,4 @@
-package com.satyam.OffTime
+package com.project.OffTime
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -10,8 +10,8 @@ import android.telephony.SmsManager
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import com.satyam.OffTime.db.DBHelper
-import com.satyam.OffTime.model.Data
+import com.project.OffTime.db.DBHelper
+import com.project.OffTime.model.Data
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -72,17 +72,21 @@ class ScreenReceiver : BroadcastReceiver() {
             if (screenOffDuration >= TimeInMilis) {
                 // Perform the action when screen off duration reaches 2 minutes
                 val helper = DBHelper(context)
-                val phoneNumber = helper.getMobile()
-                val message = "Mobile Phone Is In Active From Long Time"
+                val mobileDataList = helper.getAllMobileData()
+                val message = "Mobile Phone Is Inactive For A Long Time"
 
                 try {
                     val smsManager = SmsManager.getDefault()
-                    smsManager.sendTextMessage(phoneNumber, null, message, null, null)
-                    Toast.makeText(context, "SMS sent successfully", Toast.LENGTH_SHORT).show()
+                    for (mobileData in mobileDataList) {
+                        val phoneNumber = mobileData.mobile
+                        smsManager.sendTextMessage(phoneNumber, null, message, null, null)
+                    }
+                    Toast.makeText(context, "SMS sent successfully to all numbers", Toast.LENGTH_SHORT).show()
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    Toast.makeText(context, "SMS failed to send", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Failed to send SMS to some numbers", Toast.LENGTH_SHORT).show()
                 }
+
             }
         }
         handler?.postDelayed(runnable!!, TimeInMilis.toLong())

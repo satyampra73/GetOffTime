@@ -1,4 +1,4 @@
-package com.satyam.OffTime
+package com.project.OffTime
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

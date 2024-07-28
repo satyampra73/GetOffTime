@@ -1,4 +1,4 @@
-package com.satyam.OffTime.model
+package com.project.OffTime.model
 
 data class Data(
     val date:String,

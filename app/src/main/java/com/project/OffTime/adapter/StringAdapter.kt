@@ -1,4 +1,4 @@
-package com.satyam.OffTime.adapter
+package com.project.OffTime.adapter
 import android.content.Context
 import android.os.Build
 import android.view.LayoutInflater
@@ -7,10 +7,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import com.satyam.OffTime.R
-import com.satyam.OffTime.model.Data
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import com.project.OffTime.R
+import com.project.OffTime.model.Data
 import java.util.ArrayList
 
 

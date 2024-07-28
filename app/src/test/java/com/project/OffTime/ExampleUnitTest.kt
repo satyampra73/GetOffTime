@@ -1,4 +1,4 @@
-package com.satyam.OffTime
+package com.project.OffTime
 
 import org.junit.Test
 

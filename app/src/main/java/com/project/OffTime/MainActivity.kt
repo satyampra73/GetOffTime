@@ -1,4 +1,4 @@
-package com.satyam.OffTime
+package com.project.OffTime
 
 import android.app.Dialog
 import android.content.Intent
@@ -7,7 +7,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
-import android.telephony.SmsManager
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -18,9 +17,11 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.satyam.OffTime.adapter.StringAdapter
-import com.satyam.OffTime.databinding.ActivityMainBinding
-import com.satyam.OffTime.db.DBHelper
+import com.project.OffTime.adapter.StringAdapter
+import com.project.OffTime.databinding.ActivityMainBinding
+import com.project.OffTime.db.DBHelper
+import com.project.OffTime.model.EmergencyData
+import java.util.ArrayList
 
 
 class MainActivity : AppCompatActivity() {
@@ -126,7 +127,7 @@ class MainActivity : AppCompatActivity() {
                 binding.txtMobile.text = etEnterAmount.text.toString()
                 binding.ltMobile.visibility = View.VISIBLE
                 binding.btnAdd.visibility = View.GONE
-                dbHelper.insertOrUpdateMobile(etEnterAmount.text.toString())
+                dbHelper.insertData(etEnterAmount.text.toString(),"shyam","Brother")
             }
         })
 
@@ -178,18 +179,23 @@ class MainActivity : AppCompatActivity() {
 
         val dbHelper = DBHelper(this)
         try {
-            val mobile = dbHelper.getMobile()
-            if (mobile != null && mobile.isNotEmpty()) {
-                binding.txtMobile.text = mobile
-                binding.ltMobile.visibility = View.VISIBLE
-                binding.btnAdd.visibility = View.GONE
-            } else {
-                binding.ltMobile.visibility = View.GONE
-                binding.btnAdd.visibility = View.VISIBLE
+            val emergencyList:ArrayList<EmergencyData> = dbHelper.getAllMobileData()
+
+//            if (mobile != null && mobile.isNotEmpty()) {
+//                binding.txtMobile.text = mobile
+//                binding.ltMobile.visibility = View.VISIBLE
+//                binding.btnAdd.visibility = View.GONE
+//            } else {
+//                binding.ltMobile.visibility = View.GONE
+//                binding.btnAdd.visibility = View.VISIBLE
+//            }
+            for (data in emergencyList) {
+                Log.d("strData", data.toString())
             }
         } catch (e: Exception) {
             e.printStackTrace()
             Toast.makeText(this, "Error retrieving mobile number: ${e.message}", Toast.LENGTH_LONG).show()
+            Log.d("strData", "Error retrieving mobile number: ${e.message}")
         }
 
         // Initialize RecyclerView and adapter

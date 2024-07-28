@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.satyam.OffTime'
+    namespace 'com.project.OffTime'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.satyam.OffTime"
+        applicationId "com.project.OffTime"
         minSdk 24
         targetSdk 34
         versionCode 1

@@ -29,51 +29,12 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="10dp"
-            android:text="Add Emergency Mobile No."
+            android:text="Add Emergency Contact Info"
             android:textColor="@color/white"
             android:textAllCaps="false"
             android:background="@drawable/btn_bg"
             />
 
-        <LinearLayout
-            android:id="@+id/ltMobile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Emergency Mobile No."
-                />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                >
-                <TextView
-                    android:id="@+id/txtMobile"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:textSize="18sp"
-                    android:text="Emergency Mobile No."
-                    />
-
-                <ImageView
-                    android:id="@+id/imgEdit"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginStart="10dp"
-                    android:src="@drawable/edit"
-                    android:layout_gravity="center"
-                    />
-
-            </LinearLayout>
-
-
-        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"

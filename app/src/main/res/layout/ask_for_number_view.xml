@@ -19,28 +19,60 @@
          android:id="@+id/txtTopText"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:text="Please Enter Emergency Mobile No."
+         android:text="Please Enter Emergency Contact Info."
          android:textColor="@color/black"
          android:textSize="18sp"
          />
 
-        <EditText
-            android:id="@+id/etEnterAmount"
+        <LinearLayout
+            android:id="@+id/ltFillDetails"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/row_bg_stroke"
-            android:hint="Mobile No."
-            android:inputType="number"
-            android:maxLines="1"
-            android:layout_below="@+id/txtTopText"
-            android:padding="12dp" />
+            android:orientation="vertical"
+            android:layout_below="@id/txtTopText"
+            >
+
+            <EditText
+                android:id="@+id/etEnterName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/row_bg_stroke"
+                android:hint="Enter Name"
+                android:maxLines="2"
+                android:padding="12dp" />
+
+            <EditText
+                android:id="@+id/etEnterMobile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/row_bg_stroke"
+                android:hint="Mobile No."
+                android:inputType="number"
+                android:maxLines="1"
+                android:padding="12dp" />
+
+            <EditText
+                android:id="@+id/etRelation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/row_bg_stroke"
+                android:hint="Relation"
+                android:maxLines="2"
+                android:padding="12dp" />
+
+        </LinearLayout>
+
+
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_below="@+id/etEnterAmount"
+            android:layout_below="@+id/ltFillDetails"
             >
 
             <androidx.appcompat.widget.AppCompatButton

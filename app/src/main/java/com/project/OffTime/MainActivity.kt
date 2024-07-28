@@ -70,9 +70,6 @@ class MainActivity : AppCompatActivity() {
             openDialog()
         }
 
-        binding.imgEdit.setOnClickListener {
-            openDialog()
-        }
 
     }
 
@@ -113,21 +110,34 @@ class MainActivity : AppCompatActivity() {
         dialog.window!!.attributes.windowAnimations = R.style.animation
         dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        val etEnterAmount = dialog.findViewById<EditText>(R.id.etEnterAmount)
+        val etMobile = dialog.findViewById<EditText>(R.id.etEnterMobile)
+        val etName = dialog.findViewById<EditText>(R.id.etEnterName)
+        val etRelation = dialog.findViewById<EditText>(R.id.etRelation)
         val btnAddWallet = dialog.findViewById<AppCompatButton>(R.id.btnAddWallet)
         val btnCancel = dialog.findViewById<AppCompatButton>(R.id.btnCancel)
 
         btnAddWallet.setOnClickListener(View.OnClickListener {
-            if (etEnterAmount.text.toString().isEmpty()) {
+            if (etMobile.text.toString().isEmpty()) {
                 Toast.makeText(this@MainActivity, "Please Enter Mobile No. ", Toast.LENGTH_SHORT)
                     .show()
-            } else {
+            }
+            else if (etMobile.text.toString().length != 10) {
+                Toast.makeText(this@MainActivity, "Please Enter Valid Mobile No. ", Toast.LENGTH_SHORT)
+                    .show()
+            }
+            else if (etName.text.toString().isEmpty()) {
+                Toast.makeText(this@MainActivity, "Please Enter Name ", Toast.LENGTH_SHORT)
+                    .show()
+            }
+            else if (etRelation.text.toString().isEmpty()) {
+                Toast.makeText(this@MainActivity, "Please Enter Relation ", Toast.LENGTH_SHORT)
+                    .show()
+            }
+            else {
 
                 dialog.dismiss()
-                binding.txtMobile.text = etEnterAmount.text.toString()
-                binding.ltMobile.visibility = View.VISIBLE
-                binding.btnAdd.visibility = View.GONE
-                dbHelper.insertData(etEnterAmount.text.toString(),"shyam","Brother")
+                dbHelper.insertData(etMobile.text.toString(), etName.text.toString(), etRelation.text.toString())
+                Toast.makeText(this@MainActivity, "Details Added Successfully.", Toast.LENGTH_SHORT).show()
             }
         })
 

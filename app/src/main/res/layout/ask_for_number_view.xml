@@ -84,7 +84,7 @@
                 android:layout_marginBottom="12dp"
                 android:background="@drawable/dialog_btn_add"
                 android:gravity="center"
-                android:text="Add"
+                android:text="Done"
                 android:layout_marginEnd="2.5dp"
                 android:layout_weight="1"
                 android:textColor="@color/white"

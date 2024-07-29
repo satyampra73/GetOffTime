@@ -17,6 +17,7 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.project.OffTime.adapter.ContactInfoAdapter
 import com.project.OffTime.adapter.StringAdapter
 import com.project.OffTime.databinding.ActivityMainBinding
 import com.project.OffTime.db.DBHelper
@@ -78,21 +79,29 @@ class MainActivity : AppCompatActivity() {
         val permissionsNeeded = mutableListOf<String>()
 
         // Check SEND_SMS permission
-        val smsPermission = ContextCompat.checkSelfPermission(this, android.Manifest.permission.SEND_SMS)
+        val smsPermission =
+            ContextCompat.checkSelfPermission(this, android.Manifest.permission.SEND_SMS)
         if (smsPermission != PackageManager.PERMISSION_GRANTED) {
             permissionsNeeded.add(android.Manifest.permission.SEND_SMS)
         }
 
         // Check POST_NOTIFICATIONS permission for devices running TIRAMISU or higher
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            val notificationPermission = ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS)
+            val notificationPermission = ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.POST_NOTIFICATIONS
+            )
             if (notificationPermission != PackageManager.PERMISSION_GRANTED) {
                 permissionsNeeded.add(android.Manifest.permission.POST_NOTIFICATIONS)
             }
         }
 
         if (permissionsNeeded.isNotEmpty()) {
-            ActivityCompat.requestPermissions(this, permissionsNeeded.toTypedArray(), PERMISSION_REQUEST_CODE)
+            ActivityCompat.requestPermissions(
+                this,
+                permissionsNeeded.toTypedArray(),
+                PERMISSION_REQUEST_CODE
+            )
         } else {
             // All permissions are already granted
             startScreenService()
@@ -120,24 +129,30 @@ class MainActivity : AppCompatActivity() {
             if (etMobile.text.toString().isEmpty()) {
                 Toast.makeText(this@MainActivity, "Please Enter Mobile No. ", Toast.LENGTH_SHORT)
                     .show()
-            }
-            else if (etMobile.text.toString().length != 10) {
-                Toast.makeText(this@MainActivity, "Please Enter Valid Mobile No. ", Toast.LENGTH_SHORT)
+            } else if (etMobile.text.toString().length != 10) {
+                Toast.makeText(
+                    this@MainActivity,
+                    "Please Enter Valid Mobile No. ",
+                    Toast.LENGTH_SHORT
+                )
                     .show()
-            }
-            else if (etName.text.toString().isEmpty()) {
+            } else if (etName.text.toString().isEmpty()) {
                 Toast.makeText(this@MainActivity, "Please Enter Name ", Toast.LENGTH_SHORT)
                     .show()
-            }
-            else if (etRelation.text.toString().isEmpty()) {
+            } else if (etRelation.text.toString().isEmpty()) {
                 Toast.makeText(this@MainActivity, "Please Enter Relation ", Toast.LENGTH_SHORT)
                     .show()
-            }
-            else {
+            } else {
 
                 dialog.dismiss()
-                dbHelper.insertData(etMobile.text.toString(), etName.text.toString(), etRelation.text.toString())
-                Toast.makeText(this@MainActivity, "Details Added Successfully.", Toast.LENGTH_SHORT).show()
+                dbHelper.insertData(
+                    etMobile.text.toString(),
+                    etName.text.toString(),
+                    etRelation.text.toString()
+                )
+                Toast.makeText(this@MainActivity, "Details Added Successfully.", Toast.LENGTH_SHORT)
+                    .show()
+                getData()
             }
         })
 
@@ -185,11 +200,25 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
 
+        getData()
+        // Initialize RecyclerView and adapter
+//        val dataList = dbHelper.getAllStrings()
+//        stringAdapter = StringAdapter(this, dataList)
+//
+//        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+//        binding.recyclerView.adapter = stringAdapter
+//        stringAdapter.notifyDataSetChanged()
+
+
+        super.onResume()
+
+    }
+
+    private fun getData() {
         dbHelper = DBHelper(this)
 
-        val dbHelper = DBHelper(this)
         try {
-            val emergencyList:ArrayList<EmergencyData> = dbHelper.getAllMobileData()
+            val emergencyList: ArrayList<EmergencyData> = dbHelper.getAllMobileData()
 
 //            if (mobile != null && mobile.isNotEmpty()) {
 //                binding.txtMobile.text = mobile
@@ -199,25 +228,20 @@ class MainActivity : AppCompatActivity() {
 //                binding.ltMobile.visibility = View.GONE
 //                binding.btnAdd.visibility = View.VISIBLE
 //            }
-            for (data in emergencyList) {
-                Log.d("strData", data.toString())
-            }
+//            for (data in emergencyList) {
+//                Log.d("strData", data.toString())
+//            }
+
+            val adapter = ContactInfoAdapter(this, emergencyList)
+            binding.recyclerView.layoutManager = LinearLayoutManager(this)
+            binding.recyclerView.adapter = adapter
+            adapter.notifyDataSetChanged()
         } catch (e: Exception) {
             e.printStackTrace()
-            Toast.makeText(this, "Error retrieving mobile number: ${e.message}", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Error retrieving mobile number: ${e.message}", Toast.LENGTH_LONG)
+                .show()
             Log.d("strData", "Error retrieving mobile number: ${e.message}")
         }
-
-        // Initialize RecyclerView and adapter
-        val dataList = dbHelper.getAllStrings()
-        stringAdapter = StringAdapter(this, dataList)
-
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
-        binding.recyclerView.adapter = stringAdapter
-        stringAdapter.notifyDataSetChanged()
-
-
-        super.onResume()
 
     }
 

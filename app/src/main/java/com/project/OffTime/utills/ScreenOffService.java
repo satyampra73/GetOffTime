@@ -1,4 +1,4 @@
-package com.project.OffTime;
+package com.project.OffTime.utills;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -12,6 +12,8 @@ import android.os.IBinder;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+
+import com.project.OffTime.R;
 
 public class ScreenOffService extends Service {
 

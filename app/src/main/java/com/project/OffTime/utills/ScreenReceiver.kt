@@ -1,4 +1,4 @@
-package com.project.OffTime
+package com.project.OffTime.utills
 
 import android.content.BroadcastReceiver
 import android.content.Context

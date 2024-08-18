@@ -1,4 +1,4 @@
-package com.project.OffTime
+package com.project.OffTime.activities
 
 import android.app.Dialog
 import android.content.Intent
@@ -17,11 +17,16 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.project.OffTime.R
 import com.project.OffTime.adapter.ContactInfoAdapter
 import com.project.OffTime.adapter.StringAdapter
 import com.project.OffTime.databinding.ActivityMainBinding
 import com.project.OffTime.db.DBHelper
 import com.project.OffTime.model.EmergencyData
+import com.project.OffTime.utills.Constents
+import com.project.OffTime.utills.ScreenOffService
+import com.project.OffTime.utills.ScreenReceiver
+import com.project.OffTime.utills.UserSession
 import java.util.ArrayList
 
 
@@ -34,6 +39,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var stringAdapter: StringAdapter
     lateinit var binding: ActivityMainBinding
     private val PERMISSION_REQUEST_CODE = 123
+    lateinit var userSession : UserSession
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +47,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
         binding.toolbar.setTitleTextColor(Color.WHITE)
+        userSession = UserSession(this)
 
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 //            if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
@@ -69,6 +76,10 @@ class MainActivity : AppCompatActivity() {
         dialog = Dialog(this@MainActivity)
         binding.btnAdd.setOnClickListener {
             openDialog()
+        }
+
+        binding.btnLogOut.setOnClickListener{
+          userSession.logoutUser(this@MainActivity)
         }
 
 

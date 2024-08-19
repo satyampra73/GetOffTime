@@ -49,6 +49,9 @@ class MainActivity : AppCompatActivity() {
         binding.toolbar.setTitleTextColor(Color.WHITE)
         userSession = UserSession(this)
 
+        Log.d(Constents.TagData,"user Token :"+userSession.getData(Constents.userToken))
+        binding.txtName.text=userSession.getData(Constents.userName)
+
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 //            if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
 //                requestPermissions(

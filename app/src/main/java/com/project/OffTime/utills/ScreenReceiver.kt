@@ -10,8 +10,13 @@ import android.telephony.SmsManager
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.content.contentValuesOf
+import com.db.md.retrofit.CallbackResponse
+import com.db.md.retrofit.UtilMethods
+import com.google.gson.Gson
 import com.project.OffTime.db.DBHelper
 import com.project.OffTime.model.Data
+import com.project.OffTime.model.login.LoginResponse
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -43,8 +48,27 @@ class ScreenReceiver : BroadcastReceiver() {
                 val data = Data(getTodayDate(), formattedDuration)
                 val helper = DBHelper(context)
                 helper.insertString(data)
+                sendDataToServer(context,getTodayDate(), formattedDuration)
             }
         }
+    }
+
+    private fun sendDataToServer(context:Context,date: String, duration: String) {
+        val params : HashMap<String, String> = HashMap()
+        params["date"] = date
+        params["time"] = duration
+        UtilMethods.sendData(context,params,object : CallbackResponse{
+            override fun success(from: String?, message: String?, responseCode: Int) {
+                Log.d(Constents.TagResponse, "response : $message")
+
+            }
+
+            override fun fail(from: String?) {
+                Log.d(Constents.TagResponse, "fail : $from")
+            }
+
+        })
+
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

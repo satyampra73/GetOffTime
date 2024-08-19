@@ -63,9 +63,7 @@
                 android:background="@drawable/input_background"
                 android:paddingStart="15dp"
                 android:hint="Enter Name"
-                android:inputType="number"
                 android:maxLines="1"
-                android:maxLength="10"
                 android:padding="12dp" />
 
 

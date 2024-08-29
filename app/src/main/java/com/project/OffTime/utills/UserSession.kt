@@ -22,7 +22,7 @@ class UserSession(context: Context?) {
     }
 
     fun getData(id: String?): String? {
-        return pref?.getString(id, "")
+        return pref?.getString(id, "5")
     }
 
     fun createUserLoginSession(
@@ -38,11 +38,17 @@ class UserSession(context: Context?) {
     val isUserLoggedIn: Boolean
         get() = pref?.getBoolean(Constents.IS_USER_LOGIN, false) ?: false
 
+    fun saveConfigData(minutes: String?, battPercentage: String?) {
+        editor!!.putString(Constents.MinMinutes, minutes)
+        editor!!.putString(Constents.BatterPercentage, battPercentage)
+        editor!!.apply()
+    }
 
 
     companion object {
         const val PREFER_NAME = "Monitor"
     }
+
     fun logoutUser(activity: Activity) {
         editor!!.clear()
         editor!!.commit()

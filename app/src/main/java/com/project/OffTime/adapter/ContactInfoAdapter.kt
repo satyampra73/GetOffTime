@@ -60,14 +60,14 @@ class ContactInfoAdapter(private val context: Context, private val list: ArrayLi
             val etMobile = dialog.findViewById<EditText>(R.id.etEnterMobile)
             val etName = dialog.findViewById<EditText>(R.id.etEnterName)
             val etRelation = dialog.findViewById<EditText>(R.id.etRelation)
-            val btnAddWallet = dialog.findViewById<AppCompatButton>(R.id.btnAddWallet)
+            val btnSave = dialog.findViewById<AppCompatButton>(R.id.btnSave)
             val btnCancel = dialog.findViewById<AppCompatButton>(R.id.btnCancel)
 
             etMobile.setText(list[position].mobile)
             etName.setText(list[position].name)
             etRelation.setText(list[position].relation)
 
-            btnAddWallet.setOnClickListener(View.OnClickListener {
+            btnSave.setOnClickListener(View.OnClickListener {
                 if (etMobile.text.toString().isEmpty()) {
                     Toast.makeText(context, "Please Enter Mobile No. ", Toast.LENGTH_SHORT)
                         .show()

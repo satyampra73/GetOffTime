@@ -2,9 +2,11 @@ package com.project.OffTime.activities
 
 import android.app.Dialog
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.BatteryManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -39,7 +41,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var stringAdapter: StringAdapter
     lateinit var binding: ActivityMainBinding
     private val PERMISSION_REQUEST_CODE = 123
-    lateinit var userSession : UserSession
+    lateinit var userSession: UserSession
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,9 +50,10 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         binding.toolbar.setTitleTextColor(Color.WHITE)
         userSession = UserSession(this)
-
-        Log.d(Constents.TagData,"user Token :"+userSession.getData(Constents.userToken))
-        binding.txtName.text=userSession.getData(Constents.userName)
+        Log.d(Constents.TagData, "min :" +userSession.getData(Constents.MinMinutes))
+        Log.d(Constents.TagData, "batt :" +userSession.getData(Constents.BatterPercentage))
+        Log.d(Constents.TagData, "user Token :" + userSession.getData(Constents.userToken))
+        binding.txtName.text = userSession.getData(Constents.userName)
 
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 //            if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
@@ -81,8 +84,12 @@ class MainActivity : AppCompatActivity() {
             openDialog()
         }
 
-        binding.btnLogOut.setOnClickListener{
-          userSession.logoutUser(this@MainActivity)
+        binding.btnLogOut.setOnClickListener {
+            userSession.logoutUser(this@MainActivity)
+        }
+
+        binding.btnConfig.setOnClickListener {
+            openConfigDialog()
         }
 
 
@@ -136,10 +143,10 @@ class MainActivity : AppCompatActivity() {
         val etMobile = dialog.findViewById<EditText>(R.id.etEnterMobile)
         val etName = dialog.findViewById<EditText>(R.id.etEnterName)
         val etRelation = dialog.findViewById<EditText>(R.id.etRelation)
-        val btnAddWallet = dialog.findViewById<AppCompatButton>(R.id.btnAddWallet)
+        val btnSave = dialog.findViewById<AppCompatButton>(R.id.btnSave)
         val btnCancel = dialog.findViewById<AppCompatButton>(R.id.btnCancel)
 
-        btnAddWallet.setOnClickListener(View.OnClickListener {
+        btnSave.setOnClickListener(View.OnClickListener {
             if (etMobile.text.toString().isEmpty()) {
                 Toast.makeText(this@MainActivity, "Please Enter Mobile No. ", Toast.LENGTH_SHORT)
                     .show()
@@ -165,6 +172,63 @@ class MainActivity : AppCompatActivity() {
                     etRelation.text.toString()
                 )
                 Toast.makeText(this@MainActivity, "Details Added Successfully.", Toast.LENGTH_SHORT)
+                    .show()
+                getData()
+            }
+        })
+
+        btnCancel.setOnClickListener(View.OnClickListener { dialog.dismiss() })
+
+        dialog.show()
+    }
+
+
+    private fun openConfigDialog() {
+        dialog.setContentView(R.layout.config_setting_view)
+        dialog.window
+            ?.setLayout(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+        dialog.setCancelable(true)
+        dialog.window!!.attributes.windowAnimations = R.style.animation
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val etMinutes = dialog.findViewById<EditText>(R.id.etMinutes)
+        val etBattPer = dialog.findViewById<EditText>(R.id.etBattPercentage)
+        val btnSave = dialog.findViewById<AppCompatButton>(R.id.btnSave)
+        val btnCancel = dialog.findViewById<AppCompatButton>(R.id.btnCancel)
+
+        btnSave.setOnClickListener(View.OnClickListener {
+            if (etMinutes.text.toString().isEmpty()) {
+                Toast.makeText(this@MainActivity, "Please Enter Minutes ", Toast.LENGTH_SHORT)
+                    .show()
+            } else if (etBattPer.text.toString().isEmpty()) {
+                Toast.makeText(
+                    this@MainActivity,
+                    "Please Enter Battery Percentage ",
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
+            } else if (etMinutes.text.toString().trim().toInt()> 3000) {
+                Toast.makeText(
+                    this@MainActivity,
+                    "Please Enter Minutes below 3000",
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
+            } else if (etMinutes.text.toString().trim().toInt()> 100) {
+                Toast.makeText(
+                    this@MainActivity,
+                    "Please Enter Battery Percentage between 1 to 100",
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
+            } else {
+                val userSession  = UserSession(this)
+                userSession.saveConfigData(etMinutes.text.toString(),etBattPer.text.toString())
+                dialog.dismiss()
+                Toast.makeText(this@MainActivity, "Details Saved Successfully.", Toast.LENGTH_SHORT)
                     .show()
                 getData()
             }

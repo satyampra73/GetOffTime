@@ -59,6 +59,20 @@
             android:background="@drawable/btn_bg"
             />
 
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnConfig"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="Configuration Setting"
+            android:textColor="@color/white"
+            android:textAllCaps="false"
+            android:background="@drawable/btn_bg"
+            />
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"

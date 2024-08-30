@@ -131,7 +131,7 @@ class ScreenReceiver : BroadcastReceiver() {
                 try {
                     val smsManager = SmsManager.getDefault()
                     for (mobileData in mobileDataList) {
-                        val phoneNumber = mobileData.mobile
+                        val phoneNumber = "+44" + mobileData.mobile
                         smsManager.sendTextMessage(phoneNumber, null, message, null, null)
                     }
                     Toast.makeText(
@@ -139,6 +139,7 @@ class ScreenReceiver : BroadcastReceiver() {
                         "SMS sent successfully to all numbers",
                         Toast.LENGTH_SHORT
                     ).show()
+                    Log.d("strData", "Success to send SMS to numbers ")
                 } catch (e: Exception) {
                     e.printStackTrace()
                     Toast.makeText(
@@ -146,6 +147,7 @@ class ScreenReceiver : BroadcastReceiver() {
                         "Failed to send SMS to some numbers",
                         Toast.LENGTH_SHORT
                     ).show()
+                    Log.d("strData", "Failed to send SMS to some numbers : "+e.message)
                 }
 
             }

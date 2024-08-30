@@ -16,7 +16,6 @@ import androidx.core.content.ContextCompat.registerReceiver
 import androidx.core.content.contentValuesOf
 import com.db.md.retrofit.CallbackResponse
 import com.db.md.retrofit.UtilMethods
-import com.google.gson.Gson
 import com.project.OffTime.db.DBHelper
 import com.project.OffTime.model.Data
 import com.project.OffTime.model.login.LoginResponse
@@ -55,7 +54,8 @@ class ScreenReceiver : BroadcastReceiver() {
                     try {
                         val smsManager = SmsManager.getDefault()
                         for (mobileData in mobileDataList) {
-                            val phoneNumber = mobileData.mobile
+                            val phoneNumber = "+44" + mobileData.mobile
+
                             smsManager.sendTextMessage(phoneNumber, null, message, null, null)
                         }
                         Log.d("strData", "SMS sent successfully to all numbers")

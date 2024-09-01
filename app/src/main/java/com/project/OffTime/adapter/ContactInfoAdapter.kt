@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
@@ -27,6 +28,7 @@ class ContactInfoAdapter(private val context: Context, private val list: ArrayLi
         val txtRelation: TextView = itemView.findViewById(R.id.txtRelation)
         val btnUpdate: AppCompatButton = itemView.findViewById(R.id.btnUpdate)
         val btnDelete: AppCompatButton = itemView.findViewById(R.id.btnDelete)
+        val checkBox: CheckBox = itemView.findViewById(R.id.checkbox)
 
     }
 
@@ -45,6 +47,28 @@ class ContactInfoAdapter(private val context: Context, private val list: ArrayLi
         holder.txtName.text = list[position].name
         holder.txtMobile.text = list[position].mobile
         holder.txtRelation.text = list[position].relation
+        if (list[position].isActive==1){
+            holder.checkBox.isChecked=true
+        }else{
+            holder.checkBox.isChecked=false
+        }
+
+        holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
+            // Convert the boolean state to an integer (1 for true, 0 for false)
+            val isActiveValue = if (isChecked) 1 else 0
+
+            // Update the database with the new isActive value
+            val result = dbHelper.updateIsActive(list[position].id, isActiveValue)
+
+            if (result > 0) {
+                // Successfully updated
+                Toast.makeText(context, "Status updated", Toast.LENGTH_SHORT).show()
+            } else {
+                // Update failed
+                Toast.makeText(context, "Update failed", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         holder.btnUpdate.setOnClickListener {
             val dialog = Dialog(context)
             dialog.setContentView(R.layout.ask_for_number_view)
@@ -91,7 +115,8 @@ class ContactInfoAdapter(private val context: Context, private val list: ArrayLi
                         list[position].id,
                         etMobile.text.toString(),
                         etName.text.toString(),
-                        etRelation.text.toString()
+                        etRelation.text.toString(),
+                        1
                     )
                     holder.txtMobile.text = etMobile.text.toString()
                     holder.txtName.text = etName.text.toString()

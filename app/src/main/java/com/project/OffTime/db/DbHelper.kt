@@ -11,7 +11,7 @@ import java.util.ArrayList
 class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     companion object {
-        private const val DATABASE_VERSION = 1
+        private const val DATABASE_VERSION = 2  // Incremented version number
         private const val DATABASE_NAME = "string_db"
 
         // Table 1: String Table
@@ -26,6 +26,8 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         private const val COLUMN_EM_MOBILE = "em_mobile"
         private const val COLUMN_EM_NAME = "em_name"
         private const val COLUMN_EM_RELATION = "em_relation"
+        private const val COLUMN_EM_IS_ACTIVE = "em_active"  // New column
+
         private const val STATIC_ID = 1  // Predefined static ID for mobile_table
     }
 
@@ -43,23 +45,17 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
                 + COLUMN_MOBILE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + COLUMN_EM_MOBILE + " TEXT,"
                 + COLUMN_EM_NAME + " TEXT,"
-                + COLUMN_EM_RELATION + " TEXT"
+                + COLUMN_EM_RELATION + " TEXT,"
+                + COLUMN_EM_IS_ACTIVE + " INTEGER DEFAULT 0"  // New column with default value
                 + ")")
         db.execSQL(createTableMobile)
-//        // Insert default entry into mobile_table
-//        val values = ContentValues().apply {
-//            put(COLUMN_MOBILE_ID, STATIC_ID)
-//            put(COLUMN_EM_MOBILE, "")
-//            put(COLUMN_EM_MOBILE, "")
-//            put(COLUMN_EM_MOBILE, "")
-//        }
-//        db.insert(TABLE_MOBILE, null, values)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_STRING")
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_MOBILE")
-        onCreate(db)
+        if (oldVersion < 2) {
+            // Add the new column to the existing table
+            db.execSQL("ALTER TABLE $TABLE_MOBILE ADD COLUMN $COLUMN_EM_IS_ACTIVE INTEGER DEFAULT 1")
+        }
     }
 
     // Methods for String Table
@@ -92,12 +88,13 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
     }
 
     // Insert new data into Mobile Table
-    fun insertData(mobile: String, name: String, relation: String): Long {
+    fun insertData(mobile: String, name: String, relation: String, isActive: Boolean = true): Long {
         val db = this.writableDatabase
         val values = ContentValues().apply {
             put(COLUMN_EM_MOBILE, mobile)
             put(COLUMN_EM_NAME, name)
             put(COLUMN_EM_RELATION, relation)
+            put(COLUMN_EM_IS_ACTIVE, if (isActive) 1 else 0)
         }
         val id = db.insert(TABLE_MOBILE, null, values)
         db.close()
@@ -105,12 +102,13 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
     }
 
     // Update existing data in Mobile Table
-    fun updateData(id: Long, mobile: String, name: String, relation: String): Int {
+    fun updateData(id: Long, mobile: String, name: String, relation: String, isActive: Int ): Int {
         val db = this.writableDatabase
         val values = ContentValues().apply {
             put(COLUMN_EM_MOBILE, mobile)
             put(COLUMN_EM_NAME, name)
             put(COLUMN_EM_RELATION, relation)
+            put(COLUMN_EM_IS_ACTIVE, isActive)
         }
         val result = db.update(TABLE_MOBILE, values, "$COLUMN_MOBILE_ID = ?", arrayOf(id.toString()))
         db.close()
@@ -138,23 +136,21 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
                 val mobile = it.getString(it.getColumnIndex(COLUMN_EM_MOBILE))
                 val name = it.getString(it.getColumnIndex(COLUMN_EM_NAME))
                 val relation = it.getString(it.getColumnIndex(COLUMN_EM_RELATION))
-                dataList.add(EmergencyData(id, mobile, name, relation))
+                val isActive = it.getInt(it.getColumnIndex(COLUMN_EM_IS_ACTIVE))
+                dataList.add(EmergencyData(id, mobile, name, relation, isActive))
             }
         }
         db.close()
         return dataList
     }
-
-//    @SuppressLint("Range")
-//    fun getEmData(): String? {
-//        val db = this.readableDatabase
-//        val cursor = db.query(TABLE_MOBILE, arrayOf(COLUMN_EM_MOBILE), "$COLUMN_MOBILE_ID = ?", arrayOf(STATIC_ID.toString()), null, null, null)
-//        var mobile: String? = null
-//        if (cursor != null && cursor.moveToFirst()) {
-//            mobile = cursor.getString(cursor.getColumnIndex(COLUMN_EM_MOBILE))
-//            cursor.close()
-//        }
-//        db.close()
-//        return mobile
-//    }
+    fun updateIsActive(id: Long, isActive: Int): Int {
+        val db = this.writableDatabase
+        val values = ContentValues().apply {
+            put(COLUMN_EM_IS_ACTIVE, isActive)  // Use the integer directly
+        }
+        val result = db.update(TABLE_MOBILE, values, "$COLUMN_MOBILE_ID = ?", arrayOf(id.toString()))
+        db.close()
+        return result
+    }
 }
+

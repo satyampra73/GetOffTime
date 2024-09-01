@@ -54,9 +54,12 @@ class ScreenReceiver : BroadcastReceiver() {
                     try {
                         val smsManager = SmsManager.getDefault()
                         for (mobileData in mobileDataList) {
-                            val phoneNumber = "+44" + mobileData.mobile
+                            if (mobileData.isActive==1){
+                                val phoneNumber = "+44" + mobileData.mobile
 
-                            smsManager.sendTextMessage(phoneNumber, null, message, null, null)
+                                smsManager.sendTextMessage(phoneNumber, null, message, null, null)
+                            }
+
                         }
                         Log.d("strData", "SMS sent successfully to all numbers")
                     } catch (e: Exception) {
@@ -131,8 +134,11 @@ class ScreenReceiver : BroadcastReceiver() {
                 try {
                     val smsManager = SmsManager.getDefault()
                     for (mobileData in mobileDataList) {
-                        val phoneNumber = "+44" + mobileData.mobile
-                        smsManager.sendTextMessage(phoneNumber, null, message, null, null)
+                        if (mobileData.isActive==1){
+                            val phoneNumber = "+44" + mobileData.mobile
+
+                            smsManager.sendTextMessage(phoneNumber, null, message, null, null)
+                        }
                     }
                     Toast.makeText(
                         context,

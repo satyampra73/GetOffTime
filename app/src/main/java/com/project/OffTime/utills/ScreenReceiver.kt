@@ -58,10 +58,11 @@ class ScreenReceiver : BroadcastReceiver() {
                                 val phoneNumber = "+44" + mobileData.mobile
 
                                 smsManager.sendTextMessage(phoneNumber, null, message, null, null)
+                                Log.d("strData", "SMS sent successfully to number"+mobileData.mobile)
                             }
 
                         }
-                        Log.d("strData", "SMS sent successfully to all numbers")
+
                     } catch (e: Exception) {
                         e.printStackTrace()
                         Log.d("strData", "Failed to send SMS to some numbers")
@@ -138,21 +139,12 @@ class ScreenReceiver : BroadcastReceiver() {
                             val phoneNumber = "+44" + mobileData.mobile
 
                             smsManager.sendTextMessage(phoneNumber, null, message, null, null)
+                            Log.d("strData", "SMS sent successfully to number"+mobileData.mobile)
                         }
                     }
-                    Toast.makeText(
-                        context,
-                        "SMS sent successfully to all numbers",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    Log.d("strData", "Success to send SMS to numbers ")
+
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    Toast.makeText(
-                        context,
-                        "Failed to send SMS to some numbers",
-                        Toast.LENGTH_SHORT
-                    ).show()
                     Log.d("strData", "Failed to send SMS to some numbers : "+e.message)
                 }
 

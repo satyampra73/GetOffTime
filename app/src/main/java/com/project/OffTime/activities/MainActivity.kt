@@ -92,6 +92,10 @@ class MainActivity : AppCompatActivity() {
             openConfigDialog()
         }
 
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            checkAndRequestPermissions()
+            binding.swipeRefreshLayout.isRefreshing=false
+        }
 
     }
 
